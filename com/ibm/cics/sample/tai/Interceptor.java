@@ -29,7 +29,6 @@ public class Interceptor implements TrustAssociationInterceptor {
 	@Override
 	public void cleanup() {
 		// Do nothing
-		
 	}
 
 	@Override
@@ -66,29 +65,46 @@ public class Interceptor implements TrustAssociationInterceptor {
 			throws WebTrustAssociationFailedException {
 		
 		// set user ID from query string
-		String userid = request.getParameter("userid");
+		String userid = request.getHeader("userid");
 		
 		// if no user id supplied return unauthorized
 		if (userid == null)
 		    return TAIResult.create(HttpServletResponse.SC_UNAUTHORIZED);
 			
 		try {
+			// the code below shows an example of how you can use JCICS within your
+			// TAI. At this point you could call out to an external existing security
+			// module, if this is applicable.
+			
+			// For this sample we will print the current user ID and transaction name for
+			// the task we are running under.
+			
 			Task task = Task.getTask();
 			if (task == null) {
-				printMsg("TAI - No access to jcics");
+				// Cannot continue as we have no access to JCICS.
+				
+				printMsg("TAI - No access to JCICS");
+				
+				return TAIResult.create(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			} else {		
 				String msg = "Task("+task.getTaskNumber() + ") " +
                       "Tranid("+task.getTransactionName() +") " +
                       "running under CICS User ID (" + task.getUSERID() +")" ;
+				
 				printMsg("TAI - " + msg);
             }
 		} catch (Exception e) {
-            e.printStackTrace();
+			// If we hit an exception we have encountered a problem with JCICS, so we
+			// return an internal server error
+			
+			return TAIResult.create(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
 	
 		printMsg ("TAI - Establishing trust to user(" + userid + ")");
 		
-		// return OK return code and user ID to create subject
+		// Return OK return code and user ID to create subject.
+		// The subject will be used as the user ID that the transaction will run under.
+		
 		return TAIResult.create(HttpServletResponse.SC_OK, userid);
 	}
 	
