@@ -8,7 +8,7 @@
 /* restricted by GSA ADP Schedule Contract with IBM Corp                  */
 /*                                                                        */
 
-package com.ibm.cics.sample.tai;
+package com.ibm.cicsdev.liberty.tai;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -74,7 +74,7 @@ public class Interceptor implements TrustAssociationInterceptor {
 		try {
 			// the code below shows an example of how you can use JCICS within your
 			// TAI. At this point you could call out to an external existing security
-			// module, if this is applicable.
+			// solution, if this is applicable.
 			
 			// For this sample we will print the current user ID and transaction name for
 			// the task we are running under.
