@@ -15,7 +15,13 @@ The sample TAI takes a `userid` value passed in the header of the `HttpServletRe
 
 Although this sample shows a basic use of a TAI, within the TAI `negotiateValidateandEstablishTrust` method you can implement your own more advanced authentication methods, for example calling a third-party security application.
 
-## Create a JAR
+## Using this Sample
+
+To use this sample download the code or clone this repository and load the Interceptor.java file into your preferred Java editor or IDE.
+
+Adapt the Interceptor.java class to suit your needs, or keep as is to perform a simple test.
+
+### Creating a JAR
 
 Once you have adapted the sample TAI to suit your needs you will need to export the class as part of a jar file.
 
@@ -23,7 +29,7 @@ Within eclipse / CICS Explorer (or other mechanism), you can do this by right-cl
 
 Once you have created the JAR file, upload this (as binary) to zFS. In the example configuration we put this in the server configuration directory (same directory as server.xml).
 
-## Basic configuration
+### Basic Liberty configuration
 
 The basic configuration requires changes to server.xml. Add the following elements to server.xml:
 
@@ -60,5 +66,9 @@ You will need to change the className attribute to match the name of your TAI cl
 The id attribute in the `<interceptors>` element we define as the same value as the id for the `<library>`.
 
 This also sets the failOverToAppAuthType attribute to false, so app security is disabled.
+
+### Testing the TAI
+
+To test the TAI you will need to call into an existing application hosted in your Liberty JVM server. When you call the application, do so by sending a request using a HTTP Client. Make sure you add a `userid` attribute to the message header, with the value of this attribute being set to the user ID that will be retrieved by the TAI and passed  to Liberty. This user id will be used by CICS to run the transaction.
 
 For explanations of the other attributes see [Configuring TAI in Liberty](https://www.ibm.com/support/knowledgecenter/SSEQTP_8.5.5/com.ibm.websphere.wlp.doc/ae/twlp_sec_tai.html)
